@@ -1,8 +1,10 @@
-const server = require('express')()
+const express = require('express')
 const rederVueApp = require('./render-vue-app')
+const app = express()
 
-server.get('*', rederVueApp)
+app.use('/dist', express.static('./dist'))
+app.get('*', rederVueApp)
 
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log('Server listening on port 3000')
 })
