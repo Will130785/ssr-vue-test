@@ -1,5 +1,5 @@
 {
-  "name": "vue-ssr",
+  "name": "ssr-vue-test",
   "version": "1.0.0",
   "description": "Vue.js & Vue-Server-Renderer",
   "scripts": {
