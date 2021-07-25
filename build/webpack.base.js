@@ -2,17 +2,17 @@ const path = require('path')
 const webpack = require('webpack')
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const vueConfig = require('./vue-loader.config')
 const { VueLoaderPlugin } = require('vue-loader')
 
-console.log(process.env.NODE_ENV, '******')
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
   mode: isProd ? 'production' : 'development',
-  // devtool: isProd
-  //   ? false
-  //   : '#cheap-module-source-map',
+  devtool: isProd
+    ? false
+    : 'inline-source-map',
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',

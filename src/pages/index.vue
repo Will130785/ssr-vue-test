@@ -2,7 +2,7 @@
 <template>
   <div>
     <p>The visited URL is: {{ url }}</p>
-	<p><button @click="sayHello">Hello There</button></p>
+	<p><button @click="sayHello">Hello There!!</button></p>
 	<router-link to="/about">About page</router-link>
   </div>
 </template>
@@ -18,6 +18,12 @@ export default {
 	sayHello() {
 	  window.alert('Hello!')
 	}
+  },
+  created () {
+	console.log('created')
+  },
+  mounted () {
+	console.log('mounted')
   }
 }
 </script>
