@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
+const setupDevServer = require('./build/setup-dev-server')
 
 const app = express()
 console.log('*****', process.env.NODE_ENV)
@@ -38,9 +39,11 @@ if (isProd) {
     app,
     templatePath,
     (bundle, options) => {
+      console.log('from cb', bundle)
       renderer = createRenderer(bundle, options)
     }
   )
+
 }
 
 app.use('/dist', express.static('./dist'))
@@ -73,3 +76,58 @@ const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })
+
+// const express = require('express')
+// const path = require('path')
+// const fs = require('fs')
+// const vueServerRenderer = require('vue-server-renderer')
+// const setupDevServer = require('./build/setup-dev-server')
+
+// let port
+// const app = express()
+
+// const createRenderer = (bundle) =>
+//   vueServerRenderer.createBundleRenderer(bundle, {
+//     runInNewContext: false,
+//     template: fs.readFileSync(path.resolve(__dirname, 'src/index.template.html'), 'utf-8')
+//   })
+
+// let renderer
+
+// // You may want to serve static files with nginx or CDN in production
+// app.use('/dist', express.static('./dist'))
+// app.use('/public', express.static('./public'))
+
+// if (process.env.NODE_ENV === 'development') {
+//   port = 3000
+//   setupDevServer(app, (serverBundle) => {
+//     renderer = createRenderer(serverBundle)
+//   })
+// } else {
+//   port = process.env.PORT
+//   renderer = createRenderer(require('./dist/vue-ssr-server-bundle.json'))
+// }
+
+// app.get(/^\/(about)?\/?$/, async (req, res) => {
+//   const context = {
+//     url: req.params['0'] || '/',
+//     state: {
+//       title: 'Vue SSR Simple Setup',
+//       users: []
+//     }
+//   }
+//   let html
+
+//   try {
+//     html = await renderer.renderToString(context)
+//   } catch (err) {
+//     if (err.code === 404) {
+//       return res.status(404).send('404 | Page Not Found')
+//     }
+//     return res.status(500).send('500 | Internal Server Error')
+//   }
+
+//   res.end(html)
+// })
+
+// app.listen(port, () => console.log(`Listening on port: ${port}`))

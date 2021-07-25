@@ -9,7 +9,9 @@ const serverConfig = require('./webpack.server')
 const readFile = (fs, file) => {
   try {
     return fs.readFileSync(path.join(clientConfig.output.path, file), 'utf-8')
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 module.exports = function setupDevServer (app, templatePath, cb) {
@@ -44,22 +46,14 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   )
 
   const clientCompiler = webpack(clientConfig)
-  const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+  // const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
+  //   publicPath: clientConfig.output.publicPath
+  // })
+
+  app.use(require('webpack-dev-middleware')(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
-    noInfo: true
-  })
-  app.use(devMiddleware)
-  clientCompiler.plugin('done', stats => {
-    stats = stats.toJson()
-    stats.errors.forEach(err => console.error(err))
-    stats.warnings.forEach(err => console.warn(err))
-    if (stats.errors.length) return
-    clientManifest = JSON.parse(readFile(
-      devMiddleware.fileSystem,
-      'vue-ssr-client-manifest.json'
-    ))
-    update()
-  })
+    serverSideRender: true
+  }))
 
   app.use(require('webpack-hot-middleware')(clientCompiler, { heartbeat: 5000 }))
 
@@ -72,7 +66,58 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     if (stats.errors.length) return
 
     bundle = JSON.parse(readFile(mfs, 'vue-ssr-server-bundle.json'))
+
   })
 
   return readyPromise
 }
+
+// const setupDevServer = (app, onServerBundleReady) => {
+//   const webpack = require('webpack')
+//   const MFS = require('memory-fs')
+//   const path = require('path')
+//   const clientConfig = require('./webpack.client.js')
+//   const serverConfig = require('./webpack.server.js')
+
+//   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
+
+//   const clientCompiler = webpack(clientConfig)
+
+//   app.use(require('webpack-dev-middleware')(clientCompiler, {
+//     publicPath: clientConfig.output.publicPath,
+//     serverSideRender: true
+//   }))
+
+//   app.use(require('webpack-hot-middleware')(clientCompiler))
+
+//   global.console.log('Building SSR bundle...')
+//   const serverCompiler = webpack(serverConfig)
+//   const mfs = new MFS()
+
+//   serverCompiler.outputFileSystem = mfs
+//   serverCompiler.watch({}, (error, stats) => {
+//     if (error) throw error
+
+//     global.console.log(
+//       `
+//         ${stats.toString({
+//           colors: true,
+//           modules: false,
+//           children: false,
+//           chunks: false,
+//           chunkModules: false
+//         })}\n\n
+//       `
+//     )
+
+//     if (stats.hasErrors()) {
+//       console.error(stats.compilation.errors)
+//       throw new Error(stats.compilation.errors)
+//     }
+
+//     const bundle = JSON.parse(mfs.readFileSync(path.join(clientConfig.output.path, 'vue-ssr-server-bundle.json'), 'utf-8'))
+//     onServerBundleReady(bundle)
+//   })
+// }
+
+// module.exports = setupDevServer
