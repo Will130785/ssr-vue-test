@@ -14,12 +14,12 @@ export default {
 	asyncData({ store }) {
 		store.commit('INCREMENT')
 	},
-	created() {
-		timer = setInterval(() => console.log(Date.now()), 1000)
-	},
-	beforeDestroy() {
-		clearInterval(timer)
-	}
+	// created() {
+	// 	timer = setInterval(() => console.log(Date.now()), 1000)
+	// },
+	// beforeDestroy() {
+	// 	clearInterval(timer)
+	// }
 }
 </script>
 
