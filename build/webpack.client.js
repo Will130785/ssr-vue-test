@@ -1,5 +1,5 @@
 const webpack = require('webpack')
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const base = require('./webpack.base')
 
@@ -14,7 +14,7 @@ const config = merge(base, {
       'process.env.VUE_ENV': '"client"'
     }),
     // extract vendor chunks for better caching
-    new webpack.optimize.CommonsChunkPlugin({
+    new webpack.optimize.SplitChunksPlugin({
       name: 'vendor',
       minChunks: function (module) {
         // a module is extracted into the vendor chunk if...
@@ -28,14 +28,17 @@ const config = merge(base, {
     }),
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
-    new webpack.optimize.CommonsChunkPlugin({
-			name: 'manifest',
+    new webpack.optimize.SplitChunksPlugin({
+      name: 'manifest',
 			minChunks: Infinity
-		}),
+    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+		// 	name: 'manifest',
+		// 	minChunks: Infinity
+		// }),
 		// This plugins generates `vue-ssr-client-manifest.json` in the
     // output directory.
     new VueSSRClientPlugin()
   ]
 })
-
 module.exports = config

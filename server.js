@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
+const setupDevServer = require('./build/setup-dev-server')
 
 const app = express()
 console.log('*****', process.env.NODE_ENV)
@@ -34,13 +35,15 @@ if (isProd) {
 } else {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
-  readyPromise = require('./build/setup-dev-server')(
+  readyPromise = setupDevServer(
     app,
     templatePath,
     (bundle, options) => {
+      console.log('Test')
       renderer = createRenderer(bundle, options)
     }
   )
+  console.log(readyPromise)
 }
 
 app.use('/dist', express.static('./dist'))
@@ -66,8 +69,13 @@ async function render (req, res) {
 }
 
 app.get('*', isProd ? render : (req, res) => {
+  console.log('HEllo')
   readyPromise.then(() => render(req, res))
 })
+
+// app.get('*', isProd ? render : (req, res) => {
+//   console.log(readyPromise)
+// })
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
