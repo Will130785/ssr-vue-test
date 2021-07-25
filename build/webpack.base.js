@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const vueConfig = require('./vue-loader.config')
+
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
     filename: '[name].[chunkhash].js'
   },
   module: {
-    noParse: /es6-promise\.js$/,
+    noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
       {
         test: /\.vue$/,
@@ -52,9 +53,9 @@ module.exports = {
   },
   plugins: isProd
     ? [
-        new webpack.optimize.UglifyJsPlugin({
-          compress: { warnings: false }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //   compress: { warnings: false }
+        // }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
           filename: 'common.[chunkhash].css'
