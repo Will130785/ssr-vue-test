@@ -7,9 +7,10 @@ const vueConfig = require('./vue-loader.config')
 const { VueLoaderPlugin } = require('vue-loader')
 
 const isProd = process.env.NODE_ENV === 'production'
-
+const mode = process.env.NODE_ENV
+console.log(mode)
 module.exports = {
-  mode: isProd ? 'production' : 'development',
+  mode: mode,
   devtool: isProd
     ? false
     : 'inline-source-map',
@@ -63,11 +64,6 @@ module.exports = {
   performance: {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
-  },
-  resolve: {
-    alias: {
-      vue$: 'vue/dist/vue.js'
-    }
   },
   plugins: isProd
     ? [

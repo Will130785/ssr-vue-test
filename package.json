@@ -11,7 +11,8 @@
     "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.js --progress",
     "start-server": "cross-env node server.js",
     "prod-server": "cross-env NODE_ENV=production PORT=5000 node server.js",
-    "dev-test": "webpack serve"
+    "dev-test": "webpack serve",
+    "deploy": "git push && git push heroku master"
   },
   "dependencies": {
     "axios": "^0.21.1",
