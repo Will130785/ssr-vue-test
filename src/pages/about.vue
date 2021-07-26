@@ -23,8 +23,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
 	color: red;
+}
+
+p {
+  font-size: 30px;
 }
 </style>
