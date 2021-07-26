@@ -4,13 +4,17 @@
 		<p>Counter: {{ $store.state.counter }}<p>
 		<p><button @click="$store.commit('INCREMENT')">+</button></p>
 		<router-link to="/">Home page</router-link>
+		<Test />
 	</div>
 </template>
 
 <script>
 let timer
-
+import Test from '../components/Test.vue'
 export default {
+	components: {
+      Test
+	},
 	asyncData({ store }) {
 		store.commit('INCREMENT')
 	},

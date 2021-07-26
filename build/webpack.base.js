@@ -64,6 +64,11 @@ module.exports = {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
   },
+  resolve: {
+    alias: {
+      vue$: 'vue/dist/vue.js'
+    }
+  },
   plugins: isProd
     ? [
         // new webpack.optimize.UglifyJsPlugin({
